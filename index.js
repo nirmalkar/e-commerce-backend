@@ -9,6 +9,7 @@ const data = require("./data");
 app.use(cors({}));
 
 const userRoute = require("./routes/userRoute");
+const productRoute = require("./routes/productRoute");
 dotenv.config();
 
 //connect to db
@@ -24,17 +25,7 @@ app.use(express.json());
 
 // routing middleware
 app.use("/api/users", userRoute);
-app.get("/", (req, res) => res.send("hello"));
-app.get("/api/products", (req, res) => res.send(data));
-app.get("/api/products/:id", (req, res) => {
-  const productId = req.params.id;
-  const product = data.products.find((x) => x._id === productId);
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(400).send({ msg: "product not found" });
-  }
-});
+app.use("/api/products", productRoute);
 const port = process.env.port || 4000;
 app.listen(port, () => {
   console.log(`App is running at the port ${port}`);
