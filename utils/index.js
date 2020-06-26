@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const getToken = (user) => {
-  console.log(user);
   return jwt.sign(
     {
       _id: user.id,
@@ -15,4 +15,4 @@ const getToken = (user) => {
   );
 };
 
-module.exports = getToken;
+module.exports = { getToken };
