@@ -1,15 +1,23 @@
 const express = require("express");
 const Product = require("../models/productModal");
-const { getToken } = require("../utils/index");
-const { findById } = require("../models/productModal");
+const { isAuth, isAdmin } = require("../middlewares/atuh");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   const allProducts = await Product.find({});
   res.send(allProducts);
 });
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const Products = await Product.findOne({ _id: id });
+  if (Products) {
+    res.send(Products);
+  } else {
+    res.status(404).send({ msg: "product not found" });
+  }
+});
 
-router.post("/", async (req, res) => {
+router.post("/", isAuth, isAdmin, async (req, res) => {
   const product = new Product({
     name: req.body.name,
     image: req.body.image,
@@ -31,7 +39,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", isAuth, isAdmin, async (req, res) => {
   const productId = req.params.id;
   const product = await Product.findOne({ _id: productId });
   if (product) {
@@ -53,7 +61,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isAuth, isAdmin, async (req, res) => {
   const productId = req.params.id;
   const deletedProduct = await Product.findById(productId);
   if (deletedProduct) {
