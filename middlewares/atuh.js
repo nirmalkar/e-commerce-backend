@@ -8,7 +8,7 @@ const isAuth = (req, res, next) => {
     const onlyToken = token.slice(6, token.length);
     jwt.verify(onlyToken, process.env.JWT_SECRET, (err, decode) => {
       if (err) {
-        return res.status(401).send({ msg: "invalid token" });
+        return res.status(401).send({ msg: err });
       }
       req.user = decode;
       next();

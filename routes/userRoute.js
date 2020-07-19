@@ -1,7 +1,16 @@
 const router = require("express").Router();
 const User = require("../models/userModal");
+const { isAuth } = require("../middlewares/atuh");
 const { getToken } = require("../utils");
 
+router.get("/:userId", isAuth, async (req, res) => {
+  try {
+    const post = await User.findById(req.params.userId);
+    res.json(post);
+  } catch (err) {
+    res.json(err);
+  }
+});
 router.post("/signin", async (req, res) => {
   const signInUser = await User.findOne({
     email: req.body.email,
